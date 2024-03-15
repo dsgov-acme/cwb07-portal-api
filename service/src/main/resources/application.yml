@@ -1,0 +1,57 @@
+server:
+  servlet:
+    context-path: /portal
+spring:
+  config:
+    import: sm://
+  sleuth:
+    sampler:
+      probability: ${OTEL_SAMPLER_PROBABILITY:1.0} # Valid values [0.0 - 1.0]
+  datasource:
+    driver-class-name: org.postgresql.Driver
+    url: ${DB_CONNECTION_URL}
+    username: ${DB_USERNAME}
+    password: ${DB_PASSWORD}
+  jpa:
+    show-sql: false
+    hibernate:
+      ddl-auto: none
+    open-in-view: false
+    database-platform: org.hibernate.dialect.PostgreSQLDialect
+  liquibase:
+    enabled: true
+    change-log: classpath:/db/changelog/changelog-master.xml
+    driver-class-name: org.postgresql.Driver
+    url: ${DB_CONNECTION_URL}
+    user: ${DB_USERNAME}
+    password: ${DB_PASSWORD}
+  cloud:
+    gcp:
+      project-id: ${GCP_PROJECT_ID}
+      pubsub: # if the emulator host is set to false it will use the real pubsub service
+        emulator-host: ${PUBSUB_EMULATOR_HOST:false}
+        emulator-enabled: ${PUBSUB_EMULATOR_ENABLED:false}        
+  jackson:
+    serialization:
+      write-dates-with-zone-id: true
+      write-dates-as-timestamps: false
+    deserialization:
+      adjust_dates_to_context_time-zone: false
+
+management:
+  endpoints:
+    web:
+      cors:
+        allow-credentials: true
+        allowed-origins: ${ALLOWED_ORIGINS}
+        allowed-methods: "GET,POST,PUT,DELETE,PATCH,OPTIONS"
+        allowed-headers: "*"
+
+cerbos:
+  uri: ${CERBOS_URI}
+
+
+events:
+  subscriber:
+    subscriptions: ${PUBSUB_SUBSCRIPTIONS}
+    topics: ${SUBSCRIBER_TOPICS}

@@ -1,0 +1,109 @@
+openapi: 3.0.0
+info:
+  version: 1.0.0
+  title: Portal API
+  description: |-
+    Support API for web portals. Handles:
+    - User session management
+    - Runtime state form web portal feature flags
+servers:
+  - url: /api/v1
+paths:
+  /capabilities:
+    get:
+      summary: Get the capabilities for the currently logged in user.
+      operationId: getCapabilities
+      tags:
+        - capabilities
+      responses:
+        "200":
+          description: Success
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  type: string
+  /signOut:
+    post:
+      summary: Invalidate refresh tokens associated with an Identity Platform (GCP)
+        session.
+      operationId: signOut
+      responses:
+        "204":
+          description: Success response
+        "403":
+          description: Token not valid / Unauthenticated
+        "500":
+          description: Unexpected error
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+  /logs:
+    post:
+      summary: Creates one or more log entries
+      operationId: createLogs
+      tags:
+        - logs
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: array
+              items:
+                $ref: "#/components/schemas/LogEvent"
+        required: true
+      responses:
+        "204":
+          description: Success
+        "400":
+          description: Invalid request body
+        "500":
+          description: Internal server error
+components:
+  schemas:
+    LogEvent:
+      type: object
+      required:
+        - timestamp
+        - message
+        - level
+      properties:
+        timestamp:
+          type: string
+          format: date-time
+          description: The timestamp when the log event occurred.
+        level:
+          type: string
+          pattern: ^(TRACE|DEBUG|INFO|WARN|ERROR)$
+          default: INFO
+          description: The log message level (Values allowed are TRACE, DEBUG, INFO, WARN
+            & ERROR).
+        message:
+          type: string
+          description: The log message.
+        context:
+          type: string
+          pattern: ^[A-Za-z_]*$
+          description: The context for the log message (Only letters, underscores and
+            periods are allowed).
+        tags:
+          type: array
+          items:
+            type: string
+          description: Optional tags to help categorize the log event.
+        keys:
+          type: object
+          additionalProperties:
+            type: string
+    Error:
+      type: object
+      required:
+        - code
+        - message
+      properties:
+        code:
+          type: string
+        message:
+          type: string
