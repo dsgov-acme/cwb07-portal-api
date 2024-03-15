@@ -1,0 +1,10 @@
+apiVersion: api.cerbos.dev/v1
+resourcePolicy:
+  version: "default"
+  resource: demo
+  rules:
+
+    - actions: ["view", "update"]
+      roles:
+        - demo-admin
+      effect: EFFECT_ALLOW

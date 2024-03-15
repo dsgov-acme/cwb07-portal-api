@@ -1,0 +1,20 @@
+environment: "prod"
+createIngress: false
+isGke: true
+
+net:
+  host: "api.cwb07.dsgov.demo.nuvalence.io"
+
+env:
+  ALLOWED_ORIGINS: "http://localhost:4200, http://localhost:4201, https://api.cwb07.dsgov.demo.nuvalence.io, https://agency.cwb07.dsgov.demo.nuvalence.io, https://public.cwb07.dsgov.demo.nuvalence.io, https://employer.cwb07.dsgov.demo.nuvalence.io"
+  CERBOS_URI: "127.0.0.1:3592"
+  DB_CONNECTION_URL: "jdbc:postgresql://127.0.0.1:5432/cwb07-prod-portal-api-db"
+  DB_USERNAME: "${sm://projects/cwb07-prod/secrets/cwb07-prod-db-user/versions/latest}"
+  DB_PASSWORD: "${sm://projects/cwb07-prod/secrets/cwb07-prod-db-pass/versions/latest}"
+  GCP_PROJECT_ID: "cwb07-prod"
+  OTEL_SAMPLER_PROBABILITY: 1.0 # valid values: [0.0 - 1.0]
+  PUBSUB_EMULATOR_HOST: false # set actual "host:port" to enable or false to disable
+  PUBSUB_EMULATOR_ENABLED: false # set to true to enable emulator
+  # topics separated by comma
+  PUBSUB_SUBSCRIPTIONS: "projects/cwb07-prod/subscriptions/APPLICATION_ROLE_CAPABILITIES_SUBSCRIPTION"
+  SUBSCRIBER_TOPICS: "APPLICATION_ROLE_REPORTING"

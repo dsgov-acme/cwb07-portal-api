@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<databaseChangeLog
+        xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
+                      http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-4.3.xsd"
+        objectQuotingStrategy="QUOTE_ONLY_RESERVED_WORDS">
+
+    <changeSet id="database schemas" author="acalderon">
+        <createTable tableName="capability">
+            <column name="id" type="uuid">
+                <constraints primaryKey="true" nullable="false"/>
+            </column>
+            <column name="key" type="varchar(1024)">
+                <constraints nullable="false" />
+            </column>
+        </createTable>
+        <createTable tableName="capability_application_role">
+            <column name="capability_id" type="uuid"  >
+                <constraints nullable="false" foreignKeyName="fk_capability_application_role_capability_id" references="capability(id)"/>
+            </column>
+            <column name="application_role" type="varchar(1024)">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+        <addPrimaryKey columnNames="capability_id, application_role"
+                       constraintName="pk_capability_application_role"
+                       tableName="capability_application_role"
+                       validate="true" />
+    </changeSet>
+
+</databaseChangeLog>
